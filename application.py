@@ -48,7 +48,6 @@ def get_audio_metadata(filepath):
                 'genre': str(audio.get('TCON', '')),
                 'track': str(audio.get('TRCK', ''))
             }
-            # Проверяем наличие обложки
             if 'APIC:' in audio or 'APIC' in audio:
                 info['has_cover'] = True
             else:
@@ -123,7 +122,6 @@ def get_audio_metadata(filepath):
             return info
             
         else:
-            # Для неизвестных форматов
             return {
                 'duration': 0,
                 'title': os.path.basename(filepath),
@@ -143,8 +141,6 @@ def get_audio_metadata(filepath):
             'genre': '',
             'has_cover': False
         }
-
-# ===== HTML =====
 
 MAIN_PAGE = '''
 <!DOCTYPE html>
@@ -395,7 +391,6 @@ MAIN_PAGE = '''
         </button>
     </div>
     
-    <!-- Login Modal -->
     <div class="modal" id="loginModal">
         <div class="modal-content">
             <h2>[ACCESS]</h2>
@@ -407,7 +402,6 @@ MAIN_PAGE = '''
         </div>
     </div>
     
-    <!-- Create Modal -->
     <div class="modal" id="createModal">
         <div class="modal-content">
             <h2>[CREATE]</h2>
@@ -872,7 +866,6 @@ STORAGE_PAGE = '''
             text-align: center;
             z-index: 2000;
         }
-        /* Fullscreen viewer */
         .viewer-overlay {
             display: none;
             position: fixed;
@@ -937,7 +930,6 @@ STORAGE_PAGE = '''
             text-align: center;
             z-index: 4001;
         }
-        /* MUSIC PLAYER */
         .player-overlay {
             display: none;
             position: fixed;
@@ -1124,7 +1116,6 @@ STORAGE_PAGE = '''
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* Добавьте в стили STORAGE_PAGE */
         .progress-info {
             display: none;
             margin-top: 8px;
@@ -1151,7 +1142,6 @@ STORAGE_PAGE = '''
             background: #ff4444;
             color: #000;
         }
-        /* EDITOR */
         .editor-overlay {
             display: none;
             position: fixed;
@@ -1405,14 +1395,12 @@ STORAGE_PAGE = '''
         </div>
     </div>
     
-    <!-- VIEWER -->
     <div class="viewer-overlay" id="viewerOverlay" onclick="closeViewer(event)">
         <button class="viewer-close" onclick="closeViewer()">[x]</button>
         <div class="viewer-content" id="viewerContent"></div>
         <div class="viewer-info" id="viewerInfo"></div>
     </div>
     
-    <!-- MUSIC PLAYER -->
     <div class="player-overlay" id="playerOverlay">
         <button class="player-close" onclick="closePlayer()">[x]</button>
         <div class="player-content">
@@ -1443,7 +1431,6 @@ STORAGE_PAGE = '''
         <audio id="playerAudio" style="display:none;"></audio>
     </div>
     
-    <!-- EDITOR -->
     <div class="editor-overlay" id="editorOverlay">
         <div class="editor-header">
             <h2 id="editorFileName">[edit]</h2>
@@ -1482,7 +1469,6 @@ STORAGE_PAGE = '''
     let lastTime = 0;
     let speedSamples = [];
 
-    // ===== UPLOAD FUNCTIONS =====
     function updateUploadStatus(uploaded, total, loaded, totalSize, currentFile) {
         const status = document.getElementById('uploadStatus');
         status.classList.add('active');
@@ -1543,7 +1529,6 @@ STORAGE_PAGE = '''
             totalSize += file.size;
         }
         
-        // Сбрасываем статус
         speedSamples = [];
         lastLoaded = 0;
         lastTime = Date.now();
@@ -1564,14 +1549,11 @@ STORAGE_PAGE = '''
             if (e.lengthComputable) {
                 const percentComplete = (e.loaded / e.total) * 100;
                 
-                // Расчет количества загруженных файлов
                 const fileProgress = (e.loaded / e.total);
                 const uploadedCount = Math.floor(fileProgress * totalFiles);
                 
-                // Имя текущего файла
                 const fileName = files[currentFileIndex] ? files[currentFileIndex].name : 'Complete';
                 
-                // Обновляем статус
                 updateUploadStatus(
                     uploadedCount, 
                     totalFiles, 
@@ -1580,10 +1562,8 @@ STORAGE_PAGE = '''
                     fileName
                 );
                 
-                // Обновляем скорость
                 updateSpeed(e.loaded);
                 
-                // Обновляем прогресс-бар
                 document.getElementById('uploadProgressFill').style.width = percentComplete + '%';
             }
         });
@@ -1619,7 +1599,6 @@ STORAGE_PAGE = '''
         xhr.send(formData);
     }
 
-    // ===== FILE LOADING =====
     function loadFiles(path) {
         currentPath = path || '';
         const url = '/files/' + currentStorage + '?path=' + encodeURIComponent(currentPath);
@@ -1749,7 +1728,6 @@ STORAGE_PAGE = '''
         loadFiles(path);
     }
 
-    // ===== VIEWER =====
     function viewFile(filepath, type) {
         const viewer = document.getElementById('viewerOverlay');
         const content = document.getElementById('viewerContent');
@@ -1773,7 +1751,6 @@ STORAGE_PAGE = '''
         document.getElementById('viewerContent').innerHTML = '';
     }
 
-    // ===== MUSIC PLAYER =====
     function playTrack(index) {
         currentTrackIndex = index;
         const file = audioFiles[index];
@@ -1877,7 +1854,6 @@ STORAGE_PAGE = '''
         document.getElementById('playerPlayBtn').textContent = '▶';
     }
 
-    // ===== EDITOR =====
     function openEditor(filepath) {
         currentEditFile = filepath;
         const name = filepath.split('/').pop();
@@ -1945,7 +1921,6 @@ STORAGE_PAGE = '''
         textarea.selectionEnd = start + dateStr.length;
     }
 
-    // ===== FILE OPERATIONS =====
     function deleteFile(filepath) {
         if (!confirm('[CONFIRM] delete "' + filepath + '"?')) return;
         
@@ -1957,7 +1932,6 @@ STORAGE_PAGE = '''
             });
     }
 
-    // ===== UI HELPERS =====
     function showToast(message) {
         const toast = document.getElementById('toast');
         toast.textContent = message;
@@ -1967,7 +1941,6 @@ STORAGE_PAGE = '''
         }, 3000);
     }
 
-    // ===== EVENT LISTENERS =====
     document.addEventListener('keydown', function(e) {
         if (e.ctrlKey && e.key === 's') {
             e.preventDefault();
@@ -2032,15 +2005,11 @@ STORAGE_PAGE = '''
         }
     });
 
-    // ===== INIT =====
     loadFiles('');
 </script>
 </body>
 </html>
 '''
-
-# ===== ROUTES =====
-
 @app.route('/')
 def index():
     storages = load_storages()
@@ -2449,25 +2418,16 @@ if __name__ == '__main__':
     hostname = socket.gethostname()
     local_ip = socket.gethostbyname(hostname)
     
-    print("\n" + "="*50)
+    print("\n" + "_"*50)
+    print(" ")
     print("FILE STORAGE SERVER v5")
-    print("="*50)
+    print("_"*50)
     print("\n[ACCESS] On this computer:")
     print("   http://localhost:8000")
     print("\n[ACCESS] On other devices:")
     print("   http://" + local_ip + ":8000")
     print("\n[INFO] Config file: " + CONFIG_FILE)
-    print("\n[FEATURES]")
-    print("   - Multiple storages with password")
-    print("   - Folder navigation with breadcrumbs")
-    print("   - File preview (images, videos)")
-    print("   - Fullscreen viewer for media files")
-    print("   - Music player with progress bar")
-    print("   - Audio metadata support (MP3, FLAC, OGG, M4A, WAV, AIFF)")
-    print("   - Album cover extraction")
-    print("   - Text editor for code/txt files")
-    print("   - Upload/Download/Delete")
     print("\n[STOP] Press Ctrl+C")
-    print("="*50 + "\n")
+    print("_"*50 + "\n")
     
     app.run(host='0.0.0.0', port=8000, debug=False)
