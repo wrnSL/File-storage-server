@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  file-storage:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./storage:/app/storage
+      - ./storage_config.json:/app/storage_config.json
+    restart: unless-stopped
