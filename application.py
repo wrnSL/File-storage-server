@@ -33,7 +33,6 @@ def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
 def get_audio_metadata(filepath):
-    """Получение метаданных аудиофайла"""
     try:
         ext = os.path.splitext(filepath)[1].lower()
         
@@ -141,6 +140,16 @@ def get_audio_metadata(filepath):
             'genre': '',
             'has_cover': False
         }
+
+def create_storage_structure(base_path):
+    folders = ['media', 'media/music', 'media/video', 'media/img', 'uploads', 'uploads/download', 'other']
+    for folder in folders:
+        folder_path = os.path.join(base_path, folder)
+        if not os.path.exists(folder_path):
+            try:
+                os.makedirs(folder_path)
+            except:
+                pass
 
 MAIN_PAGE = '''
 <!DOCTYPE html>
@@ -663,7 +672,7 @@ STORAGE_PAGE = '''
         }
         .upload-status .progress-bar-custom .fill {
             height: 100%;
-            background: #1a6b3a;  /* темно-зеленый */
+            background: #1a6b3a;
             border-radius: 2px;
             width: 0%;
             transition: width 0.3s ease;
@@ -1015,7 +1024,7 @@ STORAGE_PAGE = '''
         }
         .player-progress-fill {
             height: 100%;
-            background: #1a6b3a;  /* темно-зеленый */
+            background: #1a6b3a;
             border-radius: 2px;
             width: 0%;
             transition: width 0.1s;
@@ -2010,6 +2019,7 @@ STORAGE_PAGE = '''
 </body>
 </html>
 '''
+
 @app.route('/')
 def index():
     storages = load_storages()
@@ -2051,6 +2061,8 @@ def create_storage():
             os.makedirs(path)
         except:
             return jsonify({'success': False, 'error': 'Cannot create folder'})
+    
+    create_storage_structure(path)
     
     storages[name] = {
         'path': path,
