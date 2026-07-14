@@ -1,6 +1,6 @@
 # File Storage Server
 
-![License](https://img.shields.io/badge/License-MIT-green)
+![License](https://img.shields.io/badge/License-MIT-green) ![Donations](https://img.shields.io/badge/Donations-orang)
 
 File Storage Server - это веб-приложение для организации файлового хранилища с доступом через локальную сеть. Предназначено для быстрого обмена файлами между устройствами в одной сети без необходимости использования облачных сервисов.
 
